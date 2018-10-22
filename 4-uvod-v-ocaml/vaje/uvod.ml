@@ -31,6 +31,7 @@ let rec get = ()
 
 let rec double = ()
 
+
 (*----------------------------------------------------------------------------*]
  Funkcija [divide k list] seznam razdeli na dva seznama. Prvi vsebuje prvih [k]
  elementov, drugi pa vse ostale. Funkcija vrne par teh seznamov. V primeru, ko

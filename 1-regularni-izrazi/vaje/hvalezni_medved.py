@@ -25,6 +25,15 @@ medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
 # >>> find_words(test_text, 'de')
 # {'izdere', 'debel', 'oddide', 'začudeno'}
 ###############################################################################
+import re
+
+def find_words(text, niz):
+    mn = set()
+    vzorec = r'(\b\w*{}\w*\b)'.format(niz)
+    for ujemanje in re.finditer(vzorec, text):
+        mn.add(ujemanje.group(1))
+    return mn
+
 
 
 ###############################################################################
@@ -35,6 +44,12 @@ medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
 # {'zibala', 'zibel', 'zibelko'}
 ###############################################################################
 
+def find_prefix(text, niz):
+    mn = set()
+    vzorec = r'(\b{}\w*\b)'.format(niz)
+    for ujemanje in re.finditer(vzorec, text):
+        mn.add(ujemanje.group(1))
+    return mn
 
 ###############################################################################
 # 3) Sestavite funkcijo [find_suffix], ki vrne množico vseh besed, ki se
@@ -44,6 +59,12 @@ medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
 # {'zibala', 'razveselila', 'prestrašila', 'šivala', 'opazila', 'tla'}
 ###############################################################################
 
+def find_suffix(text, niz):
+    mn = set()
+    vzorec = r'(\b\w*{}\b)'.format(niz)
+    for ujemanje in re.finditer(vzorec, text):
+        mn.add(ujemanje.group(1))
+    return mn
 
 ###############################################################################
 # 4) Sestavite funkcijo [double_letters], ki sprejme niz in vrne množico vseh
@@ -52,3 +73,12 @@ medved. Zvrhano zibelko sladkih hrušk mi je prinesel za en sam izdrt trn"."""
 # >>> double_letters('A volunteer is worth twenty pressed men.')
 # {'volunteer', 'pressed'}
 ###############################################################################
+
+def double_letters(niz):
+    mn = set()
+    vzorec = r'(\b\w*(\w)\2\w*\b)'
+    for ujemanje in re.finditer(vzorec, niz):
+        mn.add(ujemanje.group(0))
+    return mn
+
+
