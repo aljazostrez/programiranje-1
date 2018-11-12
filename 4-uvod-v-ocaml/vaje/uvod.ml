@@ -27,7 +27,17 @@ let rec penultimate_element list =
  - : int = 1
 [*----------------------------------------------------------------------------*)
 
-let rec get = ()
+let rec get k list =
+  match k, list with
+  | _, [] -> failwith "List to short"
+  | k, x :: xs when k <= 0 -> x
+  | k, x :: xs -> get (k - 1) xs
+
+(*  let rec get k list = function
+    DRUGA MOŽNOST
+    | [] -> failwith "List to short"
+    | x :: xs when k <= 0 -> x
+    | x :: xs -> get (k - 1) xs *)
 
 (*----------------------------------------------------------------------------*]
  Funkcija [double] podvoji pojavitve elementov v seznamu.
@@ -36,7 +46,14 @@ let rec get = ()
  - : int list = [1; 1; 2; 2; 3; 3]
 [*----------------------------------------------------------------------------*)
 
-let rec double = ()
+(* let rec double = *)
+  
+let double list n =
+  let rec helper acc n l =
+      if n = 0 then acc else helper (l :: acc) (n-1) l in
+    let rec helper2 acc = function
+      | [] -> acc
+      | h :: t -> helper2 (helper acc n h) t  in helper2 [] (List.rev list)
 
 
 (*----------------------------------------------------------------------------*]
@@ -50,7 +67,11 @@ let rec double = ()
  - : int list * int list = ([1; 2; 3; 4; 5], [])
 [*----------------------------------------------------------------------------*)
 
-let rec divide = ()
+
+let rec divide k list =
+  match k, list with
+  | 
+
 
 (*----------------------------------------------------------------------------*]
  Funkcija [delete k list] iz seznama izbriše [k]-ti element. V primeru
