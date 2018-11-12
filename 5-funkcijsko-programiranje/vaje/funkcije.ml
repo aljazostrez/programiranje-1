@@ -8,6 +8,8 @@ let rec reverse = function
   | [] -> []
   | x :: xs -> reverse xs @ [x]
 
+
+
 (*----------------------------------------------------------------------------*]
  Funkcija [repeat x n] vrne seznam [n] ponovitev vrednosti [x]. Za neprimerne
  vrednosti [n] funkcija vrne prazen seznam.
@@ -95,7 +97,12 @@ let rec map f = function
  - : int list = [2; 3; 4; 5; 6]
 [*----------------------------------------------------------------------------*)
 
-let rec map_tlrec = ()
+let rec map_tlrec f list =
+  let rec map_tlrec' f list acc =
+    match list with
+    | [] -> acc
+    | x :: xs -> let new_acc = f x :: acc in map_tlrec' f xs new_acc
+  in reverse (map_tlrec' f list [])
 
 (*----------------------------------------------------------------------------*]
  Funkcija [mapi] sprejme seznam in funkcijo dveh argumentov ter vrne seznam
@@ -106,7 +113,12 @@ let rec map_tlrec = ()
  - : int list = [0; 1; 2; 5; 6; 7]
 [*----------------------------------------------------------------------------*)
 
-let rec mapi = ()
+let rec mapi f list =
+  let rec mapi' acc list = 
+    match list with
+    | [] -> []
+    | x :: xs -> f x acc :: mapi' (1 + acc) xs
+  in mapi' 0 list
 
 (*----------------------------------------------------------------------------*]
  Funkcija [zip] sprejme dva seznama in vrne seznam parov istoležnih
@@ -118,7 +130,11 @@ let rec mapi = ()
  Exception: Failure "Different lengths of input lists.".
 [*----------------------------------------------------------------------------*)
 
-let rec zip = ()
+let rec zip list1 list2 = 
+  match list1, list2 with
+  | [], [] -> []
+  | x :: xs, y :: ys -> (x, y) :: zip xs ys
+  | _, _ -> failwith "Napaka"
 
 (*----------------------------------------------------------------------------*]
  Funkcija [zip_enum_tlrec] sprejme seznama [x_0; x_1; ...] in [y_0; y_1; ...]
@@ -129,7 +145,13 @@ let rec zip = ()
  - : (int * string * int) list = [(0, "a", 7); (1, "b", 3); (2, "c", 4)]
 [*----------------------------------------------------------------------------*)
 
-let rec zip_enum_tlrec = ()
+let rec zip_enum_tlrec list1 list2 = 
+  let rec zip' list1 list2 acc1 acc2=
+    match list1, list2 with
+    | [], [] -> acc1
+    | x :: xs, y :: ys -> zip' xs ys (acc1 @ [(acc2, x,y)]) (acc2+1)
+    | _,_ -> failwith "Napaka"
+  in zip' list1 list2 [] 0
 
 (*----------------------------------------------------------------------------*]
  Funkcija [unzip] je inverz funkcije [zip], torej sprejme seznam parov
@@ -139,7 +161,10 @@ let rec zip_enum_tlrec = ()
  - : int list * string list = ([0; 1; 2], ["a"; "b"; "c"])
 [*----------------------------------------------------------------------------*)
 
-let rec unzip = ()
+let rec unzip list =
+  match list with
+  | [] -> [], []
+  | (x, y) :: list' -> [], []
 
 (*----------------------------------------------------------------------------*]
  Funkcija [unzip_tlrec] je repno rekurzivna različica funkcije [unzip].

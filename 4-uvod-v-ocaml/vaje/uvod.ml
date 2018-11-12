@@ -48,12 +48,9 @@ let rec get k list =
 
 (* let rec double = *)
   
-let double list n =
-  let rec helper acc n l =
-      if n = 0 then acc else helper (l :: acc) (n-1) l in
-    let rec helper2 acc = function
-      | [] -> acc
-      | h :: t -> helper2 (helper acc n h) t  in helper2 [] (List.rev list)
+let rec double = function
+  | x :: xs -> x :: x :: double xs
+  | [] -> []
 
 
 (*----------------------------------------------------------------------------*]
@@ -69,8 +66,12 @@ let double list n =
 
 
 let rec divide k list =
-  match k, list with
-  | 
+  match (k, list) with
+  | (_, []) -> ([], [])
+  | (k, list) when k <= 0 -> ([], list)
+  | (k, x :: xs) ->
+      let (list1, list2) = divide (k - 1) xs in
+	    (x :: list1, list2)
 
 
 (*----------------------------------------------------------------------------*]
@@ -81,7 +82,9 @@ let rec divide k list =
  - : int list = [0; 0; 0; 0; 0]
 [*----------------------------------------------------------------------------*)
 
-let rec delete = ()
+let rec delete k = function
+  | [] -> failwith "List is too short."
+  | x :: xs -> if k = 0 then xs else x :: delete (k-1) xs
 
 (*----------------------------------------------------------------------------*]
  Funkcija [slice i k list] sestavi nov seznam, ki vsebuje elemente seznama
@@ -92,7 +95,11 @@ let rec delete = ()
  - : int list = [1; 2; 3]
 [*----------------------------------------------------------------------------*)
 
-let rec slice = ()
+let slice i k list =
+  let (_, slice1) = divide i list in
+  let (slice2, _) = divide (k - i) slice1 in
+  slice2
+
 
 (*----------------------------------------------------------------------------*]
  Funkcija [insert x k list] na [k]-to mesto seznama [list] vrine element [x].
@@ -104,7 +111,9 @@ let rec slice = ()
  - : int list = [1; 0; 0; 0; 0; 0]
 [*----------------------------------------------------------------------------*)
 
-let rec insert = ()
+let rec insert x k = function
+  | [] -> [x]
+  | y :: ys -> if k <= 0 then x :: y :: ys else y :: insert x k ys
 
 (*----------------------------------------------------------------------------*]
  Funkcija [rotate n list] seznam zavrti za [n] mest v levo. Predpostavimo, da
@@ -114,7 +123,9 @@ let rec insert = ()
  - : int list = [3; 4; 5; 1; 2]
 [*----------------------------------------------------------------------------*)
 
-let rec rotate = ()
+let rec rotate n list =
+  let (list1, list2) = divide n list in
+  list2 @ list1
 
 (*----------------------------------------------------------------------------*]
  Funkcija [remove x list] iz seznama izbriše vse pojavitve elementa [x].
@@ -123,7 +134,9 @@ let rec rotate = ()
  - : int list = [2; 3; 2; 3]
 [*----------------------------------------------------------------------------*)
 
-let rec remove = ()
+let rec remove x = function
+  | y :: ys -> if y = x then remove x ys else y :: remove x ys
+  | [] -> []
 
 (*----------------------------------------------------------------------------*]
  Funkcija [is_palindrome] za dani seznam ugotovi ali predstavlja palindrom.
@@ -135,7 +148,12 @@ let rec remove = ()
  - : bool = false
 [*----------------------------------------------------------------------------*)
 
-let rec is_palindrome = ()
+let is_palindrome list =
+  let rec reverse = function
+    | x :: xs -> reverse xs @ [x]
+	  | [] -> []
+  in
+  list = reverse list
 
 (*----------------------------------------------------------------------------*]
  Funkcija [max_on_components] sprejme dva seznama in vrne nov seznam, katerega
@@ -146,7 +164,10 @@ let rec is_palindrome = ()
  - : int list = [5; 4; 3; 3; 4]
 [*----------------------------------------------------------------------------*)
 
-let rec max_on_components = ()
+let rec max_on_components list1 list2 =
+  match (list1, list2) with
+  | (x :: xs, y :: ys) -> max x y :: max_on_components xs ys
+  | _ -> []
 
 (*----------------------------------------------------------------------------*]
  Funkcija [second_largest] vrne drugo največjo vrednost v seznamu. Pri tem se
@@ -158,4 +179,10 @@ let rec max_on_components = ()
  - : int = 10
 [*----------------------------------------------------------------------------*)
 
-let rec second_largest = ()
+let second_largest list =
+  let rec largest = function
+    | [] -> failwith "List is too short."
+	  | x :: [] -> x
+	  | x :: xs -> max x (largest xs)
+  in
+  largest (delete (largest list) list)
