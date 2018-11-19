@@ -95,7 +95,10 @@ let to_pound c =
  Nato napišite testni primer, ki bi predstavljal "[5; true; false; 7]".
 [*----------------------------------------------------------------------------*)
 
-
+type intbool_list = 
+  | Empty -> Empty
+  | Int_val of int * intbool_list
+  | Bool_val of bool * intbool_list
 
 (*----------------------------------------------------------------------------*]
  Funkcija [intbool_map f_int f_bool ib_list] preslika vrednosti [ib_list] v nov
@@ -103,7 +106,16 @@ let to_pound c =
  oz. [f_bool].
 [*----------------------------------------------------------------------------*)
 
-let rec intbool_map = ()
+let rec map f = function
+  | [] -> []
+  | x :: xs -> (f x) :: map f xs
+
+
+let rec intbool_map (f_int : int -> int) (f_bool : bool -> bool) = function
+  | Empty -> Empty
+  | Int_val (i,ib_list) -> Int_val (f_int i, intbool_map f_int f_bool ib_list)
+  | Bool_val (b,ib_list) -> Bool_val (f_bool b, intbool_map f_int f_bool ib_list)
+
 
 (*----------------------------------------------------------------------------*]
  Funkcija [intbool_reverse] obrne vrstni red elementov [intbool_list] seznama.
