@@ -8,7 +8,11 @@ let rec reverse = function
   | [] -> []
   | x :: xs -> reverse xs @ [x]
 
-
+(*  let reverse list =
+    let rec reverse_aux acc = function
+      | [] -> acc
+      | x :: xs -> reverse_aux (x :: acc) xs
+    in reverse_aux list [] *)
 
 (*----------------------------------------------------------------------------*]
  Funkcija [repeat x n] vrne seznam [n] ponovitev vrednosti [x]. Za neprimerne
@@ -86,7 +90,7 @@ let rec test_good n acc =
 
 let rec map f = function
   | [] -> []
-  | x :: xs -> f x :: map f xs
+  | x :: xs -> f x :: (map f xs)
 
 
 (*----------------------------------------------------------------------------*]
@@ -133,7 +137,7 @@ let rec mapi f list =
 let rec zip list1 list2 = 
   match list1, list2 with
   | [], [] -> []
-  | x :: xs, y :: ys -> (x, y) :: zip xs ys
+  | x :: xs, y :: ys -> (x, y) :: (zip xs ys)
   | _, _ -> failwith "Napaka"
 
 (*----------------------------------------------------------------------------*]
@@ -161,10 +165,9 @@ let rec zip_enum_tlrec list1 list2 =
  - : int list * string list = ([0; 1; 2], ["a"; "b"; "c"])
 [*----------------------------------------------------------------------------*)
 
-let rec unzip list =
-  match list with
-  | [] -> [], []
-  | (x, y) :: list' -> [], []
+let rec unzip = function
+  | [] -> ([], [])
+  | (x, y) :: tl -> let (list1, list2) = unzip tl in (x :: list1, y :: list2)
 
 (*----------------------------------------------------------------------------*]
  Funkcija [unzip_tlrec] je repno rekurzivna različica funkcije [unzip].
@@ -173,7 +176,13 @@ let rec unzip list =
  - : int list * string list = ([0; 1; 2], ["a"; "b"; "c"])
 [*----------------------------------------------------------------------------*)
 
-let rec unzip_tlrec = ()
+let unzip_tlrec list =
+  let rec unzip_aux list acc1 acc2 =
+    match list with
+    | [] -> (reverse acc1, reverse acc2)
+    | (x, y) :: tl -> unzip_aux tl (x :: acc1) (y :: acc2)
+  in
+  unzip_aux list [] []
 
 (*----------------------------------------------------------------------------*]
  Funkcija [fold_left_no_acc f list] sprejme seznam [x0; x1; ...; xn] in
@@ -185,7 +194,10 @@ let rec unzip_tlrec = ()
  - : string = "FICUS"
 [*----------------------------------------------------------------------------*)
 
-let rec fold_left_no_acc = ()
+let rec fold_left_no_acc f = function
+  | [] | _ :: [] -> failwith "List too short."
+  | x :: y :: [] -> f x y
+  | x :: y :: tl -> fold_left_no_acc f ((f x y) :: tl)
 
 (*----------------------------------------------------------------------------*]
  Funkcija [apply_sequence f x n] vrne seznam zaporednih uporab funkcije [f] na
@@ -199,8 +211,14 @@ let rec fold_left_no_acc = ()
  - : int list = []
 [*----------------------------------------------------------------------------*)
 
-let rec apply_sequence = ()
-
+let apply_sequence f x n =
+  let rec apply_aux f x n acc =
+    if n < 0 then
+      reverse acc
+    else
+      apply_aux f (f x) (n - 1) (x :: acc)
+  in
+  apply_aux f x n []
 (*----------------------------------------------------------------------------*]
  Funkcija [filter f list] vrne seznam elementov [list], pri katerih funkcija [f]
  vrne vrednost [true].
@@ -209,7 +227,9 @@ let rec apply_sequence = ()
  - : int list = [4; 5]
 [*----------------------------------------------------------------------------*)
 
-let rec filter = ()
+let rec filter f = function
+  | [] -> []
+  | x :: xs -> if f x then x :: (filter f xs) else filter f xs
 
 (*----------------------------------------------------------------------------*]
  Funkcija [exists] sprejme seznam in funkcijo, ter vrne vrednost [true] čim
@@ -222,7 +242,9 @@ let rec filter = ()
  - : bool = false
 [*----------------------------------------------------------------------------*)
 
-let rec exists = ()
+let rec exists f = function
+  | [] -> false
+  | x :: xs -> if f x then true else exists f xs
 
 (*----------------------------------------------------------------------------*]
  Funkcija [first f default list] vrne prvi element seznama, za katerega
@@ -235,4 +257,6 @@ let rec exists = ()
  - : int = 0
 [*----------------------------------------------------------------------------*)
 
-let rec first = ()
+let rec first f default = function
+  | [] -> default
+  | x :: xs -> if f x then x else first f default xs

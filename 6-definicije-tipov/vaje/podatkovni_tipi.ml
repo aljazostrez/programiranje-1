@@ -6,6 +6,27 @@
  Oglejmo si dva pristopa k izboljšavi varnosti pri uporabi valut.
 [*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*)
 
+type 'a option = None | Some of 'a
+
+type color =
+       | Red
+       | Blue
+       | Yellow
+       | RGB of int * int * int
+
+type 'a list =
+       | Empty (* [] *)
+       | Cons of 'a * 'a list (* x :: xs *)
+
+type 'a tree =
+       | Empty
+       | Node of 'a * 'a tree * 'a tree
+
+let has_zero tree =
+       match tree with
+       | Empty -> [] 
+       | Node  (x, left_tree, right_tree) -> []
+
 (*----------------------------------------------------------------------------*]
  Definirajte tipa [euro] in [dollar], kjer ima vsak od tipov zgolj en
  konstruktor, ki sprejme racionalno število.
@@ -21,7 +42,14 @@
  - : euro = Euro 0.4305
 [*----------------------------------------------------------------------------*)
 
+type euro = Euro of float
+type dollar = Dollar of float
 
+let dollar_to_euro_bad dollar = 0.2 *. dollar
+
+let dollar_to_euro_good dollar =
+       match dollar with
+       | Dollar v -> Euro (0.2 *. v)
 
 (*----------------------------------------------------------------------------*]
  Definirajte tip [currency] kot en vsotni tip z konstruktorji za jen, funt
@@ -35,7 +63,17 @@
  - : currency = Pound 0.007
 [*----------------------------------------------------------------------------*)
 
+type currency =
+       | Yen of float
+       | Pound of float
+       | Krona of float
+       | FMFEuro of int
 
+let to_pound c =
+       match c with
+       | Yen v -> Pound (1. *. v)
+       | Pound v -> Pound v
+       | Krona v -> Pound 0.
 
 (*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*]
  Želimo uporabljati sezname, ki hranijo tako cela števila kot tudi logične
