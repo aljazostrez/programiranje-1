@@ -12,7 +12,10 @@ let rec reverse = function
     let rec reverse_aux acc = function
       | [] -> acc
       | x :: xs -> reverse_aux (x :: acc) xs
-    in reverse_aux list [] *)
+    in reverse_aux list [] 
+    
+    let rec repeat x n = if n <= 0 then [] else x :: (repeat x (n-1))
+    *)
 
 (*----------------------------------------------------------------------------*]
  Funkcija [repeat x n] vrne seznam [n] ponovitev vrednosti [x]. Za neprimerne
@@ -50,33 +53,18 @@ let rec repeat x n =
  - : int list = [0; 1; 2; 3; 4; 5; 6; 7; 8; 9; 10]
 [*----------------------------------------------------------------------------*)
 
-let rec range n =
-  if n < 0 then
-    []
-  else
-    (range (n - 1)) @ [n]
-  
-let rec range n =
-  let rec range' n acc =
-    if n < 0 then
-      acc
-    else
-      range'(n - 1) (n :: acc)
-  in range' n []
+let range_not_tailrec n =
+  let rec range_from m =
+    if m > n
+    then []
+    else m :: (range_from (m + 1))
+  in range_from 0
 
-
-let rec test_bad n acc =
-  if n < 0 then
-    acc
-  else
-    test_bad (n - 1) (acc @ [0])
-
-
-let rec test_good n acc =
-  if n < 0 then
-    acc
-  else
-    test_good (n - 1) (0 :: acc)
+let range n =
+   let rec range_aux n acc =
+     if n < 0 then acc else range_aux (n - 1) (n :: acc)
+   in
+   range_aux n []
 
 (*----------------------------------------------------------------------------*]
  Funkcija [map f list] sprejme seznam [list] oblike [x0; x1; x2; ...] in
@@ -101,12 +89,13 @@ let rec map f = function
  - : int list = [2; 3; 4; 5; 6]
 [*----------------------------------------------------------------------------*)
 
-let rec map_tlrec f list =
-  let rec map_tlrec' f list acc =
+let map_tlrec f list =
+  let rec map_aux list acc =
     match list with
-    | [] -> acc
-    | x :: xs -> let new_acc = f x :: acc in map_tlrec' f xs new_acc
-  in reverse (map_tlrec' f list [])
+    | [] -> reverse acc
+    | x :: xs -> map_aux xs (f x :: acc)
+  in
+  map_aux list []
 
 (*----------------------------------------------------------------------------*]
  Funkcija [mapi] sprejme seznam in funkcijo dveh argumentov ter vrne seznam
@@ -117,12 +106,13 @@ let rec map_tlrec f list =
  - : int list = [0; 1; 2; 5; 6; 7]
 [*----------------------------------------------------------------------------*)
 
-let rec mapi f list =
-  let rec mapi' acc list = 
+let mapi f list =
+  let rec mapi_aux list i =
     match list with
     | [] -> []
-    | x :: xs -> f x acc :: mapi' (1 + acc) xs
-  in mapi' 0 list
+    | x :: xs -> (f i x) :: (mapi_aux xs (i + 1))
+  in
+  mapi_aux list 0
 
 (*----------------------------------------------------------------------------*]
  Funkcija [zip] sprejme dva seznama in vrne seznam parov istoležnih
