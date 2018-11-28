@@ -171,7 +171,7 @@ let rec max_on_components list1 list2 =
  dve različni vrednosti.
  Namig: Pomagaj si s pomožno funkcijo, ki poišče največjo vrednost v seznamu.
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
- # second_largest [1; 10; 11; 11; 5; 4; 10];;
+ # second_largest [1; 10 11; 11; 5; 4; 10];;
  - : int = 10
 [*----------------------------------------------------------------------------*)
 
