@@ -6,7 +6,7 @@
         {
             "label": "run file in python",
             "type": "shell",
-            "command": "python",
+            "command": "python3",
             "args": [
              "-i",
             {
@@ -18,7 +18,7 @@
         {
             "label": "OCaml",
             "type": "shell",
-            "command": "C:\\OCaml64\\usr\\local\\bin\\ocaml-env.exe exec -- C:\\OCaml64\\home\\URBAN\\.opam\\4.06.1+mingw64c\\bin\\ocaml.exe -init \\\"${file}\\\"",
+            "command": "ocaml -init ${file}",
             "group": {
                 "kind": "build",
                 "isDefault": true
