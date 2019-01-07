@@ -18,6 +18,10 @@
       0   6   11
 [*----------------------------------------------------------------------------*)
 
+type 'a tree =
+     | Empty
+     | Node of 'a tree * 'a * 'a tree
+
 let leaf x = Node(Empty, x, Empty) 
 
 let test_tree =
